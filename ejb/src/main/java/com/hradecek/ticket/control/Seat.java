@@ -37,4 +37,14 @@ public class Seat {
     public boolean isBooked() {
         return booked;
     }
+
+    @Override
+    public String toString() {
+        return "Seat{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", booked=" + booked +
+                '}';
+    }
 }
