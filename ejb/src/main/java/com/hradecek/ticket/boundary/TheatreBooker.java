@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Stateful
 @Remote(TheatreBookerRemote.class)
 @AccessTimeout(value = 5, unit = TimeUnit.MINUTES)
-public class TheatreBooker {
+public class TheatreBooker implements TheatreBookerRemote {
 
     private static final Logger logger = Logger.getLogger(TheatreBooker.class);
 
@@ -36,7 +36,7 @@ public class TheatreBooker {
     }
 
     @Override
-    public String bookSeat(int seatId) throws SeatBookedException, NoSuchSeatException, NoEnoughMoneyException {
+    public String bookSeat(int seatId) throws NoSuchSeatException, NoEnoughMoneyException, SeatBookedException {
         final int seatPrice = box.getSeatPrice(seatId);
         if (seatPrice > money) {
             throw new NoEnoughMoneyException("You don't have enough money to buy this " + seatId + " seat!");
