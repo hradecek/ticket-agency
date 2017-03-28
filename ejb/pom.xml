@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>com.hradecek.ticket</groupId>
+    <artifactId>ticket-agency</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.hradecek.ticket.ejb</groupId>
+  <artifactId>ticket-agency-ejb</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <name>ejb</name>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Versions -->
+    <ejb.version>3.2</ejb.version>
+    <!-- Maven plugins versions -->
+    <maven.ejb.plugin.version>2.5.1</maven.ejb.plugin.version>
+  </properties>
+
+  <build>
+    <finalName>${project.name}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-ejb-plugin</artifactId>
+        <version>${maven.ejb.plugin.version}</version>
+        <configuration>
+          <ejbVersion>${ejb.version}</ejbVersion>
+          <generateClient>true</generateClient>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

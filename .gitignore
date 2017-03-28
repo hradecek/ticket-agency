@@ -1,0 +1,7 @@
+# IDEs
+.idea/
+.project
+*.iml
+
+# Maven build
+target/
