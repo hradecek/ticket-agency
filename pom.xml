@@ -41,7 +41,15 @@
         <version>${wildfly.maven.plugin.version}</version>
         <inherited>false</inherited>
         <configuration>
-          ${env.JBOSS_HOME}
+          <jboss-home>${env.JBOSS_HOME}</jboss-home>
+          <add-user>
+            <users>
+              <user>
+                <username>ejbuser</username>
+                <password>ejbuser123#</password>
+              </user>
+            </users>
+          </add-user>
         </configuration>
       </plugin>
     </plugins>
