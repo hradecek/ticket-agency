@@ -20,6 +20,7 @@
   </properties>
 
   <modules>
+    <module>cdi</module>
     <module>ejb</module>
     <module>ejb-client</module>
   </modules>
