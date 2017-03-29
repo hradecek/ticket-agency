@@ -7,10 +7,8 @@ import com.hradecek.ticket.exception.SeatBookedException;
 import org.jboss.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.AccessTimeout;
-import javax.ejb.EJB;
-import javax.ejb.Remote;
-import javax.ejb.Stateful;
+import javax.ejb.*;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 @Stateful
@@ -47,5 +45,18 @@ public class TheatreBooker implements TheatreBookerRemote {
         logger.infov("Seat {0} booked", seatId);
 
         return "Seat booked.";
+    }
+
+    @Override
+    @Asynchronous
+    public Future<String> bookSeatAsync(int seatId) throws NoEnoughMoneyException {
+        try {
+            Thread.sleep(10000);
+            bookSeat(seatId);
+
+            return new AsyncResult<>("Booked seat: " + seatId + ". Money left: " + money);
+        } catch (InterruptedException | NoSuchSeatException | SeatBookedException e) {
+            return new AsyncResult<>(e.getMessage());
+        }
     }
 }

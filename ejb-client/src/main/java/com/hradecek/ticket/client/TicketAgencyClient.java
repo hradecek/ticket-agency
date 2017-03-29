@@ -10,8 +10,12 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,6 +28,7 @@ public class TicketAgencyClient {
     }
 
     private final Context context;
+    private final List<Future<String>> lastBookings = new ArrayList<>();
     private TheatreInfoRemote theatreInfo;
     private TheatreBookerRemote theatreBooker;
 
@@ -36,7 +41,7 @@ public class TicketAgencyClient {
     }
 
     private enum Command {
-        BOOK, LIST, MONEY, QUIT, INVALID;
+        BOOKASYNC, BOOK, LIST, MAIL, MONEY, QUIT, INVALID;
 
         public static Command parseCommand(String stringCommand) {
             try {
@@ -59,11 +64,17 @@ public class TicketAgencyClient {
             final Command command = Command.parseCommand(stringCommand);
 
             switch (command) {
+                case BOOKASYNC:
+                    handleBookAsync();
+                    break;
                 case BOOK:
                     handleBook();
                     break;
                 case LIST:
                     handleList();
+                    break;
+                case MAIL:
+                    handleMail();
                     break;
                 case MONEY:
                     handleMoney();
@@ -75,6 +86,14 @@ public class TicketAgencyClient {
                     logger.warning("Unknown command: " + stringCommand);
             }
         }
+    }
+
+    private void handleBookAsync() {
+        Scanner sc = new Scanner(System.in);
+        int seatId = sc.nextInt();
+
+        lastBookings.add(theatreBooker.bookSeatAsync(seatId));
+        logger.info("Booking issued. Verify your mail!");
     }
 
     private void handleBook() {
@@ -94,6 +113,30 @@ public class TicketAgencyClient {
 
     private void handleList() {
         logger.info(theatreInfo.printSeatList());
+    }
+
+    private void handleMail() {
+        boolean isDisplayed = false;
+        final List<Future<String>> notFinished = new ArrayList<>();
+
+        for (Future<String> booking : lastBookings) {
+            if (booking.isDone()) {
+                try {
+                    final String result = booking.get();
+                    logger.info("Mail received: " + result);
+                    isDisplayed = true;
+                } catch (InterruptedException | ExecutionException e) {
+                    logger.warning(e.getMessage());
+                }
+            } else {
+                notFinished.add(booking);
+            }
+        }
+
+        lastBookings.retainAll(notFinished);
+        if (!isDisplayed) {
+            logger.info("No mail received!");
+        }
     }
 
     private void handleMoney() {
