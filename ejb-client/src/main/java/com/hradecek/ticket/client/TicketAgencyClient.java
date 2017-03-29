@@ -92,7 +92,12 @@ public class TicketAgencyClient {
         Scanner sc = new Scanner(System.in);
         int seatId = sc.nextInt();
 
-        lastBookings.add(theatreBooker.bookSeatAsync(seatId));
+        try {
+            lastBookings.add(theatreBooker.bookSeatAsync(seatId));
+        } catch (NoEnoughMoneyException e) {
+            logger.warning(e.getMessage());
+            return;
+        }
         logger.info("Booking issued. Verify your mail!");
     }
 
