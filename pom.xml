@@ -23,6 +23,7 @@
     <module>cdi</module>
     <module>ejb</module>
     <module>ejb-client</module>
+    <module>web-service</module>
   </modules>
 
   <build>
