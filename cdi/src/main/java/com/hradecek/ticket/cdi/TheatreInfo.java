@@ -7,6 +7,8 @@ import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 
 @Model
@@ -25,7 +27,7 @@ public class TheatreInfo {
     @Named
     @Produces
     public Collection<Seat> getSeats() {
-        return Collections.unmodifiableCollection(new ArrayList<Seat>(seats));
+        return Collections.unmodifiableCollection(new ArrayList<>(seats));
     }
 
     public void onMemberListChanged(@Observes(notifyObserver = Reception.IF_EXISTS) final Seat member) {
